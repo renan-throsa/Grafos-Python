@@ -12,7 +12,6 @@ class Stack :
   def isEmpty(self) :
     return (self.items == [])
 
-# Grafo
 class Grafo:
     def __init__(self, direcionado=True):
         self.lista_Vertices = []
@@ -20,19 +19,19 @@ class Grafo:
         self.direcionado = direcionado
         self.tempo = 0
 
-    def add_Vertice(self, identificador):
+    def novo_Vertice(self, identificador):
         # string = input(str("Identificador do Vertice: "))
         self.lista_Vertices.append(Vertice(identificador))
 
-    def busca_Aresta(self, u, v):
+    def busca_Aresta(self, u, v):  # Método recebe dois objetos do tipo Vértice
         for w in self.lista_Arestas:
-            if w.getOrigem() == u and w.getDestino() == v:
+            origem = w.getOrigem()
+            destino = w.getDestino()
+            if origem.getId() == u.getId() and destino.getId() == v.getId():
                 return w
-            else:
-                if w.getOrigem() == v and w.getDestino() == u:
+            if self.direcionado == False:
+                if origem.getId() == v.getId() and destino.getId() == u.getId():
                     return w
-                else:
-                    return None
 
     def busca_Vertice(self, identificador):  # Método recebe um int
         for i in self.lista_Vertices:
@@ -41,11 +40,11 @@ class Grafo:
         else:
             return None
 
-    def add_Aresta(self, origem, destino, peso):
+    def nova_Aresta(self, origem, destino, peso):
         origem_aux = self.busca_Vertice(origem)
         destino_aux = self.busca_Vertice(destino)
         if (origem_aux is not None) and (destino_aux is not None):
-            self.lista_Arestas.append(Aresta(origem_aux, destino_aux, peso=0))
+            self.lista_Arestas.append(Aresta(origem_aux, destino_aux, peso))
         else:
             print("Um do Vertice ou ambos são invalidos")
 
@@ -60,11 +59,12 @@ class Grafo:
             origem = self.lista_Arestas[i].getOrigem()
             destino = self.lista_Arestas[i].getDestino()
             if (u.getId() == origem.getId()) and (destino.getVisitado() == False):
+                destino.setVisitado(True) #Para que não retorn o mesmo vertice seguidas veses
                 return destino
         else:
             return None
 
-    def busca_profundidade(self):
+    def Depth_first_search(self):
         for v in self.lista_Vertices:
             v.setVisitado(False)
             v.setImput(0)
@@ -100,12 +100,11 @@ class Grafo:
         for v in self.lista_Vertices:
             v.setEstimativa(99999)
             v.setVisitado(False)
-            v.predecessor.pop()
         fonte = self.busca_Vertice(identificador)
         fonte.setVisitado(True)
         fonte.setEstimativa(0)
 
-    def busca_Largura(self, identificador):
+    def Breadth_first_search(self, identificador):
         self.inicializa_Fonte(identificador)
         fonte = self.busca_Vertice(identificador)
         lista = [fonte]
@@ -126,7 +125,7 @@ class Grafo:
 
     def imprime_Grafo(self, origem, destino):
         if origem == destino:
-            print(Destino)
+            print(origem)
         else:
             destino_Aux = self.busca_Vertice(destino)
             if len(destino_Aux.predecessor) == 0:
@@ -136,46 +135,58 @@ class Grafo:
                 self.imprime_Grafo(origem, destino_Aux.predecessor[0])
 
     def relaxa_Vertice(self, u, v, w):
-        """
-
-		:type v: Vertice
-		"""
-        if v.getEstimativa() > u.getEstimativa() + w.getPeso:
-            v.setEstimativa(u.getEstimativa() + w.getPeso)
-            v.predecessor.append(u)
-
+        if v.getEstimativa() > (u.getEstimativa() + w.getPeso()):
+            v.setEstimativa(u.getEstimativa() + w.getPeso())
+            v.predecessor.append(u.getId()) #guarda apenas o id
+            
     def Dijkstra(self, identificador):
-        fonte = self.busca_Vertice(identificado)
+        fonte = self.busca_Vertice(identificador)
         self.inicializa_Fonte(identificador)
         lista = []
+        resposta = [] # conjunto resposta
         for i in self.lista_Vertices:
             lista.append(i)
-        lista.sort()
         while len(lista) != 0:
+            lista.sort()  # ordeno a lista baseado na estimativa
             u = lista[0]
             v = self.busca_Adjacente(u)
             if v is None:
+                for i in self.lista_Vertices:  # como o vetice u marcou seus adj como visitado nenhum outro vértice visitara
+                    i.setVisitado(
+                        False)  # esse vertice então preciso marcar como não visitado pra bucar os adj de outro vertice
+                resposta.append(lista[0])
                 lista.pop(0)  # retiro vertice sem adjacente da lista
+                
             else:
                 w = self.busca_Aresta(u, v)
-                self.relaxa_Vertice(u, v, w)
+                if w is not None:
+                    self.relaxa_Vertice(u, v, w)
+                
+
+
+        print("Estimativas: ")
+        for i in resposta:
+            print(i) #imprimo as respostas
+
+
 
 
 # Grafo exemplo
 grafo = Grafo()
-grafo.add_Vertice("u")
-grafo.add_Vertice("v")
-grafo.add_Vertice("x")
-grafo.add_Vertice("s")
-grafo.add_Vertice("y")
-grafo.add_Aresta(s, u, 10)
-grafo.add_Aresta(s, x, 5)
-grafo.add_Aresta(u, v, 1)
-grafo.add_Aresta(u, x, 2)
-grafo.add_Aresta(v, y, 4)
-grafo.add_Aresta(x, u, 3)
-grafo.add_Aresta(x, y, 2)
-grafo.add_Aresta(x, v, 9)
-grafo.add_Aresta(y, s, 7)
-grafo.add_Aresta(y, v, 6)
-
+grafo.novo_Vertice("u")
+grafo.novo_Vertice("v")
+grafo.novo_Vertice("x")
+grafo.novo_Vertice("s")
+grafo.novo_Vertice("y")
+grafo.nova_Aresta("s", "u", 10)
+grafo.nova_Aresta("s", "x", 5)
+grafo.nova_Aresta("u", "v", 1)
+grafo.nova_Aresta("u", "x", 2)
+grafo.nova_Aresta("v", "y", 4)
+grafo.nova_Aresta("x", "u", 3)
+grafo.nova_Aresta("x", "y", 2)
+grafo.nova_Aresta("x", "v", 9)
+grafo.nova_Aresta("y", "s", 7)
+grafo.nova_Aresta("y", "v", 6)
+grafo.Dijkstra("s")
+grafo.imprime_Grafo('s','y')
