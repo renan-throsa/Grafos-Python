@@ -29,9 +29,6 @@ class Grafo:
             destino = w.getDestino()
             if origem.getId() == u.getId() and destino.getId() == v.getId():
                 return w
-            if self.direcionado == False:
-                if origem.getId() == v.getId() and destino.getId() == u.getId():
-                    return w
 
     def busca_Vertice(self, identificador):  # Método recebe um int
         for i in self.lista_Vertices:
@@ -46,7 +43,10 @@ class Grafo:
         if (origem_aux is not None) and (destino_aux is not None):
             self.lista_Arestas.append(Aresta(origem_aux, destino_aux, peso))
         else:
-            print("Um do Vertice ou ambos são invalidos")
+            if self.direcionado == False:
+                self.lista_Arestas.append(Aresta(destino_aux,origem_aux, peso))#Aresta(u,v) e Aresta(v,u)
+            else:
+                print("Um do Vertice ou ambos são invalidos")
 
     def esta_Vazio(self):
         if len(self.lista_Vertices) == 0:
@@ -139,9 +139,9 @@ class Grafo:
             v.setEstimativa(u.getEstimativa() + w.getPeso())
             v.predecessor.append(u.getId()) #guarda apenas o id
             
-    def Dijkstra(self, identificador):
-        fonte = self.busca_Vertice(identificador)
-        self.inicializa_Fonte(identificador)
+    def Dijkstra(self, origem):
+        fonte = self.busca_Vertice(origem)
+        self.inicializa_Fonte(origem)
         lista = []
         resposta = [] # conjunto resposta
         for i in self.lista_Vertices:
@@ -168,10 +168,53 @@ class Grafo:
         for i in resposta:
             print(i) #imprimo as respostas
 
+    def Bellman_Ford(self,origem):
+        self.inicializa_Fonte(origem)
+        for i in range(len(self.lista_Vertices)-1):
+            for w in self.lista_Arestas:
+                u = w.getOrigem()
+                v = w.getDestino()
+                self.relaxa_Vertice(u,v,w)
+
+        for w in self.lista_Arestas:
+            u = w.getOrigem()
+            v = w.getDestino()
+            if u.getEstimativa() > v.getEstimativa() + w.getPeso():
+                return False # Não existe ciclo negativo
+            else:
+                return True #Exixte ciclo negatio
+
+
+    def Minimum_panning_Tree(self,origem): #Prim
+        fonte = self.busca_Vertice(origem)
+        self.inicializa_Fonte(origem)
+        lista = []
+        arvore = []  # conjunto resposta
+        for i in self.lista_Vertices:
+            lista.append(i)
+        while len(lista) != 0:
+            lista.sort()# ordeno a lista baseado na estimativa
+            u = lista[0]
+            v = self.busca_Adjacente(u)
+            if v is None:
+                for i in self.lista_Vertices:  # como o vetice u marcou seus adj como visitado nenhum outro vértice visitara
+                    i.setVisitado(False)  # esse vertice então preciso marcar como não visitado pra bucar os adj de outro vertice
+                lista.pop(0)  # retiro vertice sem adjacente
+            else:
+                w = self.busca_Aresta(u,v)
+                if v.getEstimativa > w.getPeso():
+                    v.predecessor.append(u.getId())
+                    arvore.append(w)
+
+        for w in arvore:
+            print(w)
+
+
 
 
 
 # Grafo exemplo
+"""""""""
 grafo = Grafo()
 grafo.novo_Vertice("u")
 grafo.novo_Vertice("v")
@@ -183,10 +226,15 @@ grafo.nova_Aresta("s", "x", 5)
 grafo.nova_Aresta("u", "v", 1)
 grafo.nova_Aresta("u", "x", 2)
 grafo.nova_Aresta("v", "y", 4)
-grafo.nova_Aresta("x", "u", 3)
+grafo.nova_Aresta("x", "u", -3)
 grafo.nova_Aresta("x", "y", 2)
 grafo.nova_Aresta("x", "v", 9)
 grafo.nova_Aresta("y", "s", 7)
 grafo.nova_Aresta("y", "v", 6)
 grafo.Dijkstra("s")
 grafo.imprime_Grafo('s','y')
+if (grafo.Bellman_Ford("s")):
+	print("Existe ciclo negativo")
+else:
+	print("Não existe clico negativo")
+"""""""""
