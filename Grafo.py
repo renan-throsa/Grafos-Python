@@ -12,6 +12,7 @@ class Stack :
   def isEmpty(self) :
     return (self.items == [])
 
+# Grafo
 class Grafo:
     def __init__(self, direcionado=True):
         self.lista_Vertices = []
@@ -42,11 +43,11 @@ class Grafo:
         destino_aux = self.busca_Vertice(destino)
         if (origem_aux is not None) and (destino_aux is not None):
             self.lista_Arestas.append(Aresta(origem_aux, destino_aux, peso))
-        else:
-            if self.direcionado == False:
+        
+        if self.direcionado == False:
                 self.lista_Arestas.append(Aresta(destino_aux,origem_aux, peso))#Aresta(u,v) e Aresta(v,u)
-            else:
-                print("Um do Vertice ou ambos são invalidos")
+        else:
+            print("Um do Vertice ou ambos são invalidos")
 
     def esta_Vazio(self):
         if len(self.lista_Vertices) == 0:
@@ -185,7 +186,7 @@ class Grafo:
                 return True #Exixte ciclo negatio
 
 
-    def Minimum_panning_Tree(self,origem): #Prim
+    def Minimum_spanning_tree(self,origem): #Prim
         fonte = self.busca_Vertice(origem)
         self.inicializa_Fonte(origem)
         lista = []
@@ -202,7 +203,7 @@ class Grafo:
                 lista.pop(0)  # retiro vertice sem adjacente
             else:
                 w = self.busca_Aresta(u,v)
-                if v.getEstimativa > w.getPeso():
+                if v.getEstimativa() > w.getPeso():
                     v.predecessor.append(u.getId())
                     arvore.append(w)
 
@@ -210,12 +211,10 @@ class Grafo:
             print(w)
 
 
-
-
-
 # Grafo exemplo
-"""""""""
-grafo = Grafo()
+
+"""
+grafo = Grafo() #grafo não derecionado
 grafo.novo_Vertice("u")
 grafo.novo_Vertice("v")
 grafo.novo_Vertice("x")
@@ -233,8 +232,25 @@ grafo.nova_Aresta("y", "s", 7)
 grafo.nova_Aresta("y", "v", 6)
 grafo.Dijkstra("s")
 grafo.imprime_Grafo('s','y')
-if (grafo.Bellman_Ford("s")):
-	print("Existe ciclo negativo")
-else:
-	print("Não existe clico negativo")
-"""""""""
+"""
+grafo = Grafo(False)
+grafo.novo_Vertice("A")
+grafo.novo_Vertice("B")
+grafo.novo_Vertice("C")
+grafo.novo_Vertice("D")
+grafo.novo_Vertice("E")
+grafo.novo_Vertice("F")
+grafo.novo_Vertice("G")
+
+grafo.nova_Aresta("A", "B", 7)
+grafo.nova_Aresta("A", "D", 5)
+grafo.nova_Aresta("B", "C", 8)
+grafo.nova_Aresta("B", "D", 9)
+grafo.nova_Aresta("B", "E", 7)
+grafo.nova_Aresta("C", "E", 5)
+grafo.nova_Aresta("D", "F", 6)
+grafo.nova_Aresta("D", "E", 15)
+grafo.nova_Aresta("E", "F", 8)
+grafo.nova_Aresta("E", "G", 9)
+grafo.nova_Aresta("F", "G", 6)
+#resposta desejada: G(V,A)[(A,B),(A,D),(B,E),(C,E),(D,F),(D,F),(E,G)]
