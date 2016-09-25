@@ -24,4 +24,4 @@ class Aresta():
 		self.destino = vertice
 	
 	def __str__(self):
-		return("Origem : %s \n Destino: %s \n Peso: %i"%(self.origem.getId(),self.destino.getId(),self.peso))
+		return "A(%s----%i---->%s)" % (self.origem.getId(),self.peso,self.destino.getId())
