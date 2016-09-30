@@ -12,7 +12,6 @@ class Stack :
   def isEmpty(self) :
     return (self.items == [])
 
-# Grafo
 class Grafo:
     def __init__(self, direcionado=True):
         self.lista_Vertices = []
@@ -43,11 +42,11 @@ class Grafo:
         destino_aux = self.busca_Vertice(destino)
         if (origem_aux is not None) and (destino_aux is not None):
             self.lista_Arestas.append(Aresta(origem_aux, destino_aux, peso))
-        
-        if self.direcionado == False:
-                self.lista_Arestas.append(Aresta(destino_aux,origem_aux, peso))#Aresta(u,v) e Aresta(v,u)
         else:
             print("Um do Vertice ou ambos são invalidos")
+
+        if self.direcionado == False:
+                self.lista_Arestas.append(Aresta(destino_aux,origem_aux, peso))#Aresta(u,v) e Aresta(v,u)
 
     def esta_Vazio(self):
         if len(self.lista_Vertices) == 0:
@@ -68,35 +67,26 @@ class Grafo:
     def Depth_first_search(self):
         for v in self.lista_Vertices:
             v.setVisitado(False)
-            v.setImput(0)
-            v.setOutput(0)
         for v in self.lista_Vertices:
             if not v.getVisitado():
-                print("Visitando o vertice: %s" % v.getId())
                 self.visita(v)
 
     def visita(self, u):
+        print("Visitando o vertice: %s" % u.getId())
         u.setVisitado(True)
-        grafo.tempo = +1
+        grafo.tempo += 1
         u.setImput(grafo.tempo)
-        v = self.busca_Adjacente(u)
-        if v is not None:
-            if not v.getVisitado():
-                print("Predecessor de %s" % v.getId())
-                print(u)
-                v.predecessor.append(u)
-                self.visita(v)
-            else:
-                u.setVisitado(True)
-                grafo.tempo = +1
-                u.setOutput(grafo.tempo)
-                print(u)
-        else:
-            u.setVisitado(True)
-            grafo.tempo = +1
-            u.setOutput(grafo.tempo)
-            print(u)
-
+        v = self.busca_Adjacente(u)#retorna apenas não visitado ou nulo
+        while v is not None:
+            v.predecessor.append(u.getId())
+            self.visita(v)
+            v = self.busca_Adjacente(u) 
+            
+        grafo.tempo += 1
+        u.setOutput(grafo.tempo)
+        print("Voltando para: ",u.predecessor)
+    
+        
     def inicializa_Fonte(self, identificador):  # Função usado no BFS e Dijkstra
         for v in self.lista_Vertices:
             v.setEstimativa(99999)
@@ -116,7 +106,7 @@ class Grafo:
                 lista.pop(0)  # retiro o vertice sem adjacentes
 
             else:
-                grafo.tempo = +1
+                grafo.tempo += 1
                 v.setImput(grafo.tempo)
                 v.predecessor.append(u.getId())
                 v.setVisitado(True)
@@ -211,9 +201,56 @@ class Grafo:
             print(w)
 
 
-# Grafo exemplo
+    def is_Cyclic(self,u):
+        if (self.lista_Arestas > len(self.lista_Vertices) - 1):
+            return "Erro,grafo não eh DAG (directed acyclic graph)."
 
+    def transposto(self):
+        for i in range(len(lista)):
+            origem = lista[0].getOrigem()
+            destino = lista[0].getDestino()
+            lista.pop(0)
+            lista.append(Aresta(destino, origem, 0))
+
+
+    def Strong_component_algorithm(self):
+        self.lista_Vertices.sort(key=lambda u: u.output, reverse=True) #ordena a lista em ralação a vertice.output
+        u = self.lista_Vertices[0]
+
+# Grafo exemplo
+grafo = Grafo()
+grafo.novo_Vertice(0)
+grafo.novo_Vertice(1)
+grafo.novo_Vertice(2)
+grafo.novo_Vertice(3)
+grafo.novo_Vertice(4)
+grafo.novo_Vertice(5)
+grafo.nova_Aresta(0,1,0)
+grafo.nova_Aresta(0,4,0)
+grafo.nova_Aresta(1,2,0)
+grafo.nova_Aresta(1,4,0)
+grafo.nova_Aresta(2,3,0)
+grafo.nova_Aresta(3,1,0)
+grafo.nova_Aresta(4,3,0)
+grafo.nova_Aresta(5,4,0)
+grafo.nova_Aresta(5,0,0)
 """
+grafo = Grafo()
+grafo.novo_Vertice(0)
+grafo.novo_Vertice(1)
+grafo.novo_Vertice(2)
+grafo.novo_Vertice(3)
+
+grafo.nova_Aresta(0,1,0)#(origem,destino,peso)
+grafo.nova_Aresta(0,3,0)
+grafo.nova_Aresta(1,2,0)
+grafo.nova_Aresta(2,0,0)
+grafo.nova_Aresta(2,3,0)
+
+grafo.Depth_first_search()
+
+grafo.Strong_component_algorithm()
+
 grafo = Grafo() #grafo não derecionado
 grafo.novo_Vertice("u")
 grafo.novo_Vertice("v")
@@ -232,7 +269,7 @@ grafo.nova_Aresta("y", "s", 7)
 grafo.nova_Aresta("y", "v", 6)
 grafo.Dijkstra("s")
 grafo.imprime_Grafo('s','y')
-"""
+
 grafo = Grafo(False)
 grafo.novo_Vertice("A")
 grafo.novo_Vertice("B")
@@ -253,4 +290,6 @@ grafo.nova_Aresta("D", "E", 15)
 grafo.nova_Aresta("E", "F", 8)
 grafo.nova_Aresta("E", "G", 9)
 grafo.nova_Aresta("F", "G", 6)
+grafo.Minimum_spanning_tree("A")
 #resposta desejada: G(V,A)[(A,B),(A,D),(B,E),(C,E),(D,F),(D,F),(E,G)]
+"""
