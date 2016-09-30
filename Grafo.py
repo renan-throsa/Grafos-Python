@@ -65,8 +65,11 @@ class Grafo:
             return None
 
     def Depth_first_search(self):
+        self.tempo = 0
         for v in self.lista_Vertices:
             v.setVisitado(False)
+            v.input = 0
+            v.output = 0
         for v in self.lista_Vertices:
             if not v.getVisitado():
                 self.visita(v)
@@ -205,19 +208,70 @@ class Grafo:
         if (self.lista_Arestas > len(self.lista_Vertices) - 1):
             return "Erro,grafo não eh DAG (directed acyclic graph)."
 
-    def transposto(self):
-        for i in range(len(lista)):
-            origem = lista[0].getOrigem()
-            destino = lista[0].getDestino()
-            lista.pop(0)
-            lista.append(Aresta(destino, origem, 0))
+    def grafo_Transposto(self):#w(u,v) passa a ser w(v,u)
+        for i in range(len(self.lista_Arestas)):
+            origem = self.lista_Arestas[0].getOrigem()
+            destino = self.lista_Arestas[0].getDestino()
+            self.lista_Arestas.pop(0)
+            self.lista_Arestas.append(Aresta(destino, origem, 0))
 
 
     def Strong_component_algorithm(self):
+        print("Busca em Profundidade")
+        self.Depth_first_search()
         self.lista_Vertices.sort(key=lambda u: u.output, reverse=True) #ordena a lista em ralação a vertice.output
-        u = self.lista_Vertices[0]
+        for w in grafo.lista_Arestas:
+            print(w)
+        self.grafo_Transposto()
+        print("Grafo Transposto:")
+        for w in grafo.lista_Arestas:
+            print(w)
+        for i in self.lista_Vertices:
+            i.input = 0
+            i.output = 0
+            i.setVisitado(False)
+        print("\nComponetes fortemente Conexos\n")
+        for i in self.lista_Vertices:
+            if not i.getVisitado():
+                self.visita(i)
+
+
 
 # Grafo exemplo
+#Exemplo Componentes fortemente conexos
+grafo = Grafo()
+grafo.novo_Vertice(0)
+grafo.novo_Vertice(1)
+grafo.novo_Vertice(2)
+grafo.novo_Vertice(3)
+grafo.nova_Aresta(0,1,0)
+grafo.nova_Aresta(0,3,0)
+grafo.nova_Aresta(1,2,0)
+grafo.nova_Aresta(2,0,0)
+grafo.nova_Aresta(2,3,0)
+grafo.Strong_component_algorithm()
+"""
+#Exemplo Dijkstra
+grafo = Grafo() #grafo não derecionado
+grafo.novo_Vertice("u")
+grafo.novo_Vertice("v")
+grafo.novo_Vertice("x")
+grafo.novo_Vertice("s")
+grafo.novo_Vertice("y")
+grafo.nova_Aresta("s", "u", 10)
+grafo.nova_Aresta("s", "x", 5)
+grafo.nova_Aresta("u", "v", 1)
+grafo.nova_Aresta("u", "x", 2)
+grafo.nova_Aresta("v", "y", 4)
+grafo.nova_Aresta("x", "u", 3)
+grafo.nova_Aresta("x", "y", 2)
+grafo.nova_Aresta("x", "v", 9)
+grafo.nova_Aresta("y", "s", 7)
+grafo.nova_Aresta("y", "v", 6)
+grafo.Dijkstra("s")
+grafo.imprime_Grafo('s','y')
+
+#Exemplo Busca em profundidade
 grafo = Grafo()
 grafo.novo_Vertice(0)
 grafo.novo_Vertice(1)
@@ -234,42 +288,9 @@ grafo.nova_Aresta(3,1,0)
 grafo.nova_Aresta(4,3,0)
 grafo.nova_Aresta(5,4,0)
 grafo.nova_Aresta(5,0,0)
-"""
-grafo = Grafo()
-grafo.novo_Vertice(0)
-grafo.novo_Vertice(1)
-grafo.novo_Vertice(2)
-grafo.novo_Vertice(3)
 
-grafo.nova_Aresta(0,1,0)#(origem,destino,peso)
-grafo.nova_Aresta(0,3,0)
-grafo.nova_Aresta(1,2,0)
-grafo.nova_Aresta(2,0,0)
-grafo.nova_Aresta(2,3,0)
 
-grafo.Depth_first_search()
-
-grafo.Strong_component_algorithm()
-
-grafo = Grafo() #grafo não derecionado
-grafo.novo_Vertice("u")
-grafo.novo_Vertice("v")
-grafo.novo_Vertice("x")
-grafo.novo_Vertice("s")
-grafo.novo_Vertice("y")
-grafo.nova_Aresta("s", "u", 10)
-grafo.nova_Aresta("s", "x", 5)
-grafo.nova_Aresta("u", "v", 1)
-grafo.nova_Aresta("u", "x", 2)
-grafo.nova_Aresta("v", "y", 4)
-grafo.nova_Aresta("x", "u", -3)
-grafo.nova_Aresta("x", "y", 2)
-grafo.nova_Aresta("x", "v", 9)
-grafo.nova_Aresta("y", "s", 7)
-grafo.nova_Aresta("y", "v", 6)
-grafo.Dijkstra("s")
-grafo.imprime_Grafo('s','y')
-
+#Exemplo Árovre geradora mínima
 grafo = Grafo(False)
 grafo.novo_Vertice("A")
 grafo.novo_Vertice("B")
