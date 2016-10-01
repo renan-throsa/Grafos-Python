@@ -1,0 +1,17 @@
+//Quetões 1 - 5 devem ser implementadas com matriz e lista 
+Questão 1= Não Feita!
+Questão 2= Não Feita!
+Questão 3= Não Feita!
+Questão 4= Não Feita!
+Questão 5= Não Feita!
+
+
+Questão 6 = Feita!
+Questão 7 = Feita!
+Questão 8 = Feita!
+Questão 9 = Feita!
+Questão 10= Não Feita!
+Questão 11= Não Feita!
+Questão 12= Feita!
+Questão 13= Feita!
+Questão 14= Feita!
