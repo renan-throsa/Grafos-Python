@@ -1,17 +1,17 @@
-//Quetıes 1 - 5 devem ser implementadas com matriz e lista 
-Quest„o 1= N„o Feita!
-Quest„o 2= N„o Feita!
-Quest„o 3= N„o Feita!
-Quest„o 4= N„o Feita!
-Quest„o 5= N„o Feita!
+//Quet√µes 1 - 5 devem ser implementadas com matriz e lista 
+Quest√£o 1= N√£o Feita!
+Quest√£o 2= N√£o Feita!
+Quest√£o 3= N√£o Feita!
+Quest√£o 4= N√£o Feita!
+Quest√£o 5= N√£o Feita!
 
 
-Quest„o 6 = Feita!
-Quest„o 7 = Feita!
-Quest„o 8 = Feita!
-Quest„o 9 = Feita!
-Quest„o 10= N„o Feita!
-Quest„o 11= N„o Feita!
-Quest„o 12= Feita!
-Quest„o 13= Feita!
-Quest„o 14= Feita!
+Quest√£o 6 = Feita!
+Quest√£o 7 = Feita!
+Quest√£o 8 = Feita!
+Quest√£o 9 = Feita!
+Quest√£o 10= Quase Feita!
+Quest√£o 11= Feita!
+Quest√£o 12= Feita!
+Quest√£o 13= Feita!
+Quest√£o 14= Feita!
