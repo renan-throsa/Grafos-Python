@@ -12,6 +12,7 @@ class Stack :
   def isEmpty(self) :
     return (self.items == [])
 
+# Grafo
 class Grafo:
     def __init__(self, direcionado=True):
         self.lista_Vertices = []
@@ -29,6 +30,7 @@ class Grafo:
             destino = w.getDestino()
             if origem.getId() == u.getId() and destino.getId() == v.getId():
                 return w
+            
 
     def busca_Vertice(self, identificador):  # Método recebe um int
         for i in self.lista_Vertices:
@@ -37,7 +39,7 @@ class Grafo:
         else:
             return None
 
-    def nova_Aresta(self, origem, destino, peso):
+    def nova_Aresta(self, origem, destino, peso): #Método recebe dois identificadores
         origem_aux = self.busca_Vertice(origem)
         destino_aux = self.busca_Vertice(destino)
         if (origem_aux is not None) and (destino_aux is not None):
@@ -88,7 +90,7 @@ class Grafo:
         grafo.tempo += 1
         u.setOutput(grafo.tempo)
         print("Voltando para: ",u.predecessor)
-    
+
         
     def inicializa_Fonte(self, identificador):  # Função usado no BFS e Dijkstra
         for v in self.lista_Vertices:
@@ -183,25 +185,36 @@ class Grafo:
         fonte = self.busca_Vertice(origem)
         self.inicializa_Fonte(origem)
         lista = []
-        arvore = []  # conjunto resposta
         for i in self.lista_Vertices:
             lista.append(i)
         while len(lista) != 0:
             lista.sort()# ordeno a lista baseado na estimativa
             u = lista[0]
             v = self.busca_Adjacente(u)
+
             if v is None:
-                for i in self.lista_Vertices:  # como o vetice u marcou seus adj como visitado nenhum outro vértice visitara
+                for i in lista:  # como o vetice u marcou seus adj como visitado nenhum outro vértice visitara
                     i.setVisitado(False)  # esse vertice então preciso marcar como não visitado pra bucar os adj de outro vertice
-                lista.pop(0)  # retiro vertice sem adjacente
+                  # retiro vertice sem adjacente
+                grafo.tempo += 1
+                u.setImput(grafo.tempo)
+                lista.remove(u)
             else:
                 w = self.busca_Aresta(u,v)
-                if v.getEstimativa() > w.getPeso():
-                    v.predecessor.append(u.getId())
-                    arvore.append(w)
+                if lista.count(v) > 0:
+                    if v.getEstimativa() > w.getPeso():
+                        v.predecessor.append(u.getId())
+                        v.setEstimativa(w.getPeso())
 
-        for w in arvore:
-            print(w)
+
+        for u in self.lista_Vertices:
+            if len(u.predecessor) > 0:
+                print(u.predecessor,"------",u.getId())
+        self.lista_Vertices.sort(key=lambda u: u.input, reverse=False)
+        for i in self.lista_Vertices:
+            print(i)
+                
+
 
 
     def is_Cyclic(self,u):
@@ -235,11 +248,41 @@ class Grafo:
             if not i.getVisitado():
                 self.visita(i)
 
+    def euleriano(self):
+        for u in self.lista_Vertices:
+            if self.grau(u) % 2 is not 0:
+                return False
+        return True
 
 
+    def grau(self,u):
+        grau = 0
+        for w in self.lista_Arestas:
+            if u == w.getOrigem():
+                grau += 1
+        return grau
+
+    def ehPonto(self,u):
+        for v in self.lista_Vertices:
+            v.setVisitado(False)
+
+        u.setVisitado(True)
+        self.visita(self.busca_Adjacente(u))
+        for v in self.lista_Vertices:
+            if v.getVisitado() == False:
+                return True
+
+    def Articulation(self):
+        art = []
+        for u in self.lista_Vertices:
+            if self.ehPonto(u):
+                art.append(u.getId())
+        print("Pontos de Articulação",art)
 # Grafo exemplo
 #Exemplo Componentes fortemente conexos
+"""
 grafo = Grafo()
+#Exemplo componente fortemente conexo
 grafo.novo_Vertice(0)
 grafo.novo_Vertice(1)
 grafo.novo_Vertice(2)
@@ -250,7 +293,7 @@ grafo.nova_Aresta(1,2,0)
 grafo.nova_Aresta(2,0,0)
 grafo.nova_Aresta(2,3,0)
 grafo.Strong_component_algorithm()
-"""
+
 #Exemplo Dijkstra
 grafo = Grafo() #grafo não derecionado
 grafo.novo_Vertice("u")
@@ -291,7 +334,7 @@ grafo.nova_Aresta(5,0,0)
 
 
 #Exemplo Árovre geradora mínima
-grafo = Grafo(False)
+grafo = Grafo()
 grafo.novo_Vertice("A")
 grafo.novo_Vertice("B")
 grafo.novo_Vertice("C")
@@ -299,18 +342,80 @@ grafo.novo_Vertice("D")
 grafo.novo_Vertice("E")
 grafo.novo_Vertice("F")
 grafo.novo_Vertice("G")
-
+#A
 grafo.nova_Aresta("A", "B", 7)
 grafo.nova_Aresta("A", "D", 5)
-grafo.nova_Aresta("B", "C", 8)
+#B
+grafo.nova_Aresta("B", "A", 7)
 grafo.nova_Aresta("B", "D", 9)
+grafo.nova_Aresta("B", "C", 8)
 grafo.nova_Aresta("B", "E", 7)
+#C
+grafo.nova_Aresta("C", "B", 8)
 grafo.nova_Aresta("C", "E", 5)
+#D
+grafo.nova_Aresta("D", "A", 5)
+grafo.nova_Aresta("D", "B", 9)
+grafo.nova_Aresta("D", "E",15)
 grafo.nova_Aresta("D", "F", 6)
-grafo.nova_Aresta("D", "E", 15)
+#E
+grafo.nova_Aresta("E", "B", 7)
+grafo.nova_Aresta("E", "C", 5)
+grafo.nova_Aresta("E", "D",15)
 grafo.nova_Aresta("E", "F", 8)
 grafo.nova_Aresta("E", "G", 9)
-grafo.nova_Aresta("F", "G", 6)
-grafo.Minimum_spanning_tree("A")
-#resposta desejada: G(V,A)[(A,B),(A,D),(B,E),(C,E),(D,F),(D,F),(E,G)]
+#F
+grafo.nova_Aresta("F", "D", 6)
+grafo.nova_Aresta("F", "E", 8)
+grafo.nova_Aresta("F", "G",11)
+#G
+grafo.nova_Aresta("G", "F",11)
+grafo.nova_Aresta("G", "E", 9)
+
+grafo.Minimum_spanning_tree("D")
+
+
+
+#Exemplo Ciclo Euleriano
+grafo = Grafo(False)
+grafo.novo_Vertice('v')
+grafo.novo_Vertice('x')
+grafo.novo_Vertice('u')
+grafo.novo_Vertice('y')
+grafo.novo_Vertice('w')
+grafo.novo_Vertice('z')
+
+grafo.nova_Aresta('v','x',0)
+grafo.nova_Aresta('v','u',0)
+grafo.nova_Aresta('x','u',0)
+grafo.nova_Aresta('x','y',0)
+grafo.nova_Aresta('x','w',0)
+grafo.nova_Aresta('u','y',0)
+grafo.nova_Aresta('u','w',0)
+grafo.nova_Aresta('y','z',0)
+grafo.nova_Aresta('y','w',0)
+grafo.nova_Aresta('w','z',0)
+
+print(grafo.euleriano())
 """
+#exemplo ponto de articulação
+grafo = Grafo(False)
+grafo.novo_Vertice('a')
+grafo.novo_Vertice('b')
+grafo.novo_Vertice('c')
+grafo.novo_Vertice('d')
+grafo.novo_Vertice('e')
+grafo.novo_Vertice('f')
+grafo.novo_Vertice('g')
+
+grafo.nova_Aresta('a','d',0)
+grafo.nova_Aresta('a','e',0)
+grafo.nova_Aresta('b','e',0)
+grafo.nova_Aresta('b','f',0)
+grafo.nova_Aresta('c','f',0)
+grafo.nova_Aresta('c','g',0)
+grafo.nova_Aresta('d','e',0)
+grafo.nova_Aresta('e','f',0)
+grafo.nova_Aresta('f','g',0)
+
+grafo.Articulation()
