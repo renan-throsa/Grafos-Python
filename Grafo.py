@@ -1,3 +1,6 @@
+from Vertice import Vertice
+from Aresta import Aresta
+
 # Grafo
 class Grafo:
     def __init__(self, direcionado=True):
@@ -123,11 +126,19 @@ class Grafo:
             print("Fim")
         else:
             destino_Aux = self.busca_Vertice(destino)
+            print(destino_Aux)
             if len(destino_Aux.predecessor) == 0:
                 print("Não ha caminho")
             else:
                 print(destino_Aux.predecessor[0])
                 self.imprime_Grafo(origem, destino_Aux.predecessor[0])
+
+    def printa_grafo(self):
+        lista_formatada = ""
+        for i in self.lista_Arestas:
+            lista_formatada += str(i)
+            lista_formatada += "\n"
+        return lista_formatada
 
     ####################################################################
 
@@ -292,7 +303,7 @@ class Grafo:
 
     def eh_euleriano(self):
         for u in self.lista_Vertices:
-            if self.grau(u) % 2 is not 0:
+            if self.grau(u) % 2 != 0:
                 return False
         return True
 

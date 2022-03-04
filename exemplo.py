@@ -1,5 +1,4 @@
 from Grafo import Grafo
-from Vertice import Vertice
 
 grafo = Grafo()
 
@@ -17,7 +16,4 @@ grafo.nova_Aresta(1, 5, 0)
 grafo.nova_Aresta(1, 6, 0)
 grafo.nova_Aresta(2, 3, 0)
 
-for i in grafo.lista_Arestas:
-    print(i)
-
-print(grafo.busca_Aresta(Vertice(1), Vertice(3)))
+print(grafo.printa_grafo())
