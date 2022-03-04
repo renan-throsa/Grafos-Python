@@ -178,6 +178,56 @@ class Grafo:
         print("Estimativas: ")
         for i in resposta:
             print(i)  # imprimo as respostas
+    
+    def generate_subsets(self, set_, curr_subset, subsets_, k, next_index):
+        if len(curr_subset) == int(k):
+            subsets_.append(curr_subset)
+            return
+        if next_index + 1 <= len(set_):
+            curr_subset_exclude = curr_subset.copy()
+            curr_subset.append(set_[next_index])
+            self.generate_subsets(set_, curr_subset, subsets_, k, next_index+1)
+            self.generate_subsets(set_, curr_subset_exclude, subsets_, k, next_index+1)
+
+    ###################################
+
+    def verify_vertex_cover(cover, edges):
+    # check that atleast one vertice from each edge appears in cover
+        for edge in edges:
+            in_cover = False
+            for vertex in cover:
+                if edge[0] == vertex or edge[1] == vertex: 
+                        in_cover = True
+            # stop processing as soon as one edge found not in cover
+            if in_cover == False:
+                return False
+    # return true if all edges have atleast one endpoint in cover
+        return True
+
+    def gen_subsets(self, set_, k):
+        curr_subset = []
+        res = []
+        self.generate_subsets(set_, curr_subset, res, k, 0)
+        return res
+        
+    def bruteForce(self):
+        vertices = self.lista_Vertices
+        k = len(vertices)
+        res = []
+        # generate all edges present in graph
+        edges = self.lista_Arestas
+        for i in range(1, k):
+            # generate all subset of size i from set vertices
+            subsets_ = self.gen_subsets(vertices, i)
+            for s in subsets_:
+                # check if subset s is a cover for graph
+                if self.verify_vertex_cover(s, edges) == True:
+                    # since subsets are generated in  increasing size, the first
+                    # subset that is cover can be returned as the minimal one
+                    res.append(s)
+                    print(res)
+                    return 
+        return res
     ####################################################################
     
     def BellManFord2(self,origem):

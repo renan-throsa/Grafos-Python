@@ -17,3 +17,5 @@ grafo.nova_Aresta(1, 6, 0)
 grafo.nova_Aresta(2, 3, 0)
 
 print(grafo.printa_grafo())
+
+print(grafo.bruteForce())
