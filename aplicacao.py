@@ -4,7 +4,7 @@ option = 1
 grafo = Grafo()
 while(option):
     print("\nOpções:\n1-Adicionar vértice\n2-Adicionar aresta\n3-Remover vértice\n4-Remover aresta",
-        "\n5-Mostrar Grafo\n0-Sair da Aplicação\n")
+        "\n5-Realizar Cobertura Mínima de Vértices\n6-Mostrar Grafo\n0-Sair da Aplicação\n")
     option = int(input("O que deseja fazer ? "))
 
     if option == 1:
@@ -35,4 +35,6 @@ while(option):
             grafo.remove_Aresta(v, w)
             print("Aresta {}-{} removida com sucesso.".format(v, w))
     elif option == 5:
+        print("ainda nao, amigo.")
+    elif option == 6:
         print(grafo.printa_grafo())
