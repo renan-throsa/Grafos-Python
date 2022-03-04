@@ -53,6 +53,10 @@ class Grafo:
             else:
                 return None
     
+    #==============================================================================
+    #MODIFICAR O CODIGO PARA NAO PERMITIR QUE SEJAM CRIADAS ARESTAS IGUAIS
+    #==============================================================================
+
     def nova_Aresta(self, origem, destino, peso):  # Método recebe dois identificadores
         origem_aux = self.busca_Vertice(origem)
         destino_aux = self.busca_Vertice(destino)
