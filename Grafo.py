@@ -11,7 +11,10 @@ class Grafo:
 
     def novo_Vertice(self, identificador):
         # string = input(str("Identificador do Vertice: "))
-        self.lista_Vertices.append(Vertice(identificador))
+        if(self.busca_Vertice(identificador) is None):
+            self.lista_Vertices.append(Vertice(identificador))
+            return True
+        return False
 
     def busca_Aresta(self, u, v):  # Método recebe dois objetos do tipo Vértice
         for w in self.lista_Arestas:
@@ -19,6 +22,16 @@ class Grafo:
             destino = w.getDestino()
             if origem.getId() == u.getId() and destino.getId() == v.getId():
                 return w
+        return None
+
+    def busca_aresta_vertice(self, u): # Método recebe um objeto do tipo Vértice
+        a = []
+        for w in self.lista_Arestas:
+            origem = w.getOrigem()
+            destino = w.getDestino()
+            if origem.getId() == u or destino.getId() == u:
+                a.append(w)
+        return a
 
     def busca_Vertice(self, identificador):  # Método recebe um int
         for i in self.lista_Vertices:
@@ -26,17 +39,55 @@ class Grafo:
                 return i
         else:
             return None
-
+    
+    def remove_vertice(self, identificador): #Método recebe um int
+        v = self.busca_Vertice(identificador)
+        if v is None:
+            return None
+        else:
+            self.lista_Vertices.remove(v)
+            arestas = self.busca_aresta_vertice(identificador)
+            if len(arestas) != 0:
+                for x in arestas: 
+                    self.lista_Arestas.remove(x)
+            else:
+                return None
+    
     def nova_Aresta(self, origem, destino, peso):  # Método recebe dois identificadores
         origem_aux = self.busca_Vertice(origem)
         destino_aux = self.busca_Vertice(destino)
         if (origem_aux is not None) and (destino_aux is not None):
             self.lista_Arestas.append(Aresta(origem_aux, destino_aux, peso))
         else:
-            print("Um do Vertice ou ambos são invalidos")
+            return False
 
         if self.direcionado == False:
             self.lista_Arestas.append(Aresta(destino_aux, origem_aux, peso))  # Aresta(u,v) e Aresta(v,u)
+        return True
+
+    def remove_Aresta(self, origem, destino):
+        v = self.busca_Vertice(origem)
+        w = self.busca_Vertice(destino)
+        if v is None or w is None:
+            return False
+
+        x = self.busca_Aresta(v, w)
+        y = self.busca_Aresta(w, v)
+        #Verifica se encontrou a aresta
+        if x is None and y is None:
+            return False
+        #Remove todas as arestas correspondentes
+        try:
+            while True:
+                try:
+                    self.lista_Arestas.remove(x)
+                except ValueError:
+                    self.lista_Arestas.remove(y)
+        except ValueError:
+            pass
+        
+        return True
+
 
     def esta_Vazio(self):
         if len(self.lista_Vertices) == 0:
@@ -138,6 +189,10 @@ class Grafo:
         for i in self.lista_Arestas:
             lista_formatada += str(i)
             lista_formatada += "\n"
+        if len(self.lista_Vertices) == 0:
+            return "============= O grafo ainda nao possui nenhum vertice ============="
+        if lista_formatada == "":
+            return "============= O grafo ainda nao possui nenhuma aresta ============="
         return lista_formatada
 
     ####################################################################
