@@ -13,16 +13,14 @@ grafo.nova_Aresta(1, 2, 0)
 grafo.nova_Aresta(1, 3, 0)
 grafo.nova_Aresta(2, 3, 0)
 grafo.nova_Aresta(2, 4, 0)
-grafo.nova_Aresta(3, 5, 0)
-grafo.nova_Aresta(4, 6, 0)
-grafo.nova_Aresta(4, 5, 0)
+grafo.nova_Aresta(2, 5, 0)
+grafo.nova_Aresta(2, 6, 0)
 
 print(grafo.printa_grafo())
 
 result = grafo.bruteForce()
 
-print(result)
-
 for item in result:
     for vertice in item:
         print(vertice.getId(), end=" ")
+    print()

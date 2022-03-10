@@ -215,6 +215,7 @@ class Grafo:
         vertices = self.lista_Vertices
         k = len(vertices)
         res = []
+        min_vertices_lenght = len(vertices)
         # generate all edges present in graph
         edges = self.lista_Arestas
     
@@ -224,13 +225,14 @@ class Grafo:
             
             for s in subsets_:
                 # check if subset s is a cover for graph
-                
-                if self.verify_vertex_cover(s, edges) == True:
+
+                if self.verify_vertex_cover(s, edges) is True and len(s) <= min_vertices_lenght:
+                    min_vertices_lenght = len(s)
                     # since subsets are generated in  increasing size, the first
                     # subset that is cover can be returned as the minimal one
                     res.append(s)
-                    
-                    return res
+
+        return res
 
     ####################################################################
     
